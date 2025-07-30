@@ -4,15 +4,20 @@ import time
 from generate_frame import generate_frame
 import os
 
-# Load stream key from environment variable
+# Load your YouTube stream key
 STREAM_KEY = os.getenv("STREAM_KEY")
 RTMP_URL = "rtmp://a.rtmp.youtube.com/live2"
 
 def stream_loop():
     count = 2_000_000
+
     while count > 0:
         print(f"[INFO] Generating frame #{count}")
-        frame_path = generate_frame(count)
+        try:
+            frame_path = generate_frame(count)
+        except Exception as e:
+            print(f"[FATAL] Could not generate frame: {e}")
+            break
 
         print(f"[INFO] Streaming person #{count}")
         ffmpeg_cmd = [
@@ -32,7 +37,12 @@ def stream_loop():
             f"{RTMP_URL}/{STREAM_KEY}"
         ]
 
-        subprocess.run(ffmpeg_cmd)
+        try:
+            subprocess.run(ffmpeg_cmd)
+        except Exception as e:
+            print(f"[ERROR] Failed to run FFmpeg: {e}")
+            break
+
         count -= 1
         time.sleep(1)
 
