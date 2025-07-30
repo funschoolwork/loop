@@ -5,5 +5,5 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: python main.py
     envVars:
-      - key: STREAM_KEY
+      - key: mz2w-65sz-d3bb-m07y-0zg0
         sync: false
